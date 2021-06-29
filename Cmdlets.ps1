@@ -60,6 +60,7 @@ function Get-AccountsWithPasswordAboutToExpire
                 GivenName = $user.GivenName
                 DisplayName = $user.DisplayName
                 EmailAddress = $user.Mail
+                UserPrincipalName = $user.UserPrincipalName
                 SamAccountName = $user.SamAccountName
                 ExpirationDate = $expirationDate
                 DaysBeforeExpiration = ($expirationDate.Date - (Get-Date).Date).Days
@@ -125,7 +126,7 @@ function Send-PasswordExpirationNotice
             $mail.From = $From
             $mail.To.Add($item.EmailAddress)
             $mail.Subject = $Subject
-            $mail.Body = $EmailTemplate.Replace('{NAME}', $item.GivenName).Replace('{SAM}', $item.SamAccountName).Replace('{DAYS}', $msg).Replace('{DATE}', $date)
+            $mail.Body = $EmailTemplate.Replace('{NAME}', $item.GivenName).Replace('{UPN}', $item.UserPrincipalName).Replace('{DAYS}', $msg).Replace('{DATE}', $date)
             $smtpClient.Send($mail)
             $mail.Dispose()
         }
